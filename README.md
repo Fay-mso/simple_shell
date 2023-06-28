@@ -1,1 +1,1 @@
-The shell project done by Nicole and Selina
+Simple shell project
