@@ -103,6 +103,24 @@ int read_history(info_t *info)
 }
 
 /**
+ * renumber_history - re-numbers the History linked list after changes
+ * @info: Structure containing potential arguments. Used to maintain
+ * Return: new history count
+ */
+int renumber_history(info_t *info)
+{
+	list_t *node = info->history;
+	int i = 0;
+
+	while (node)
+	{
+		node->num = i++;
+		node = node->next;
+	}
+	return (info->histcount = i);
+}
+
+/**
  * build_history_list - Adds entry to a History linked list
  * @info: Structure containing potential arguments. Used to maintain
  * @buf: buffer
@@ -121,22 +139,4 @@ int build_history_list(info_t *info, char *buf, int linecount)
 	if (!info->history)
 		info->history = node;
 	return (0);
-}
-
-/**
- * renumber_history - re-numbers the History linked list after changes
- * @info: Structure containing potential arguments. Used to maintain
- * Return: new history count
- */
-int renumber_history(info_t *info)
-{
-	list_t *node = info->history;
-	int i = 0;
-
-	while (node)
-	{
-		node->num = i++;
-		node = node->next;
-	}
-	return (info->histcount = i);
 }
