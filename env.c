@@ -1,17 +1,18 @@
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 #include "shell.h"
 #include <stdlib.h>
 #include <unistd.h>
-extern char **environ;
 /**
 *_env - function that prints the current working environment
 *Return: 0
 **/
 int _env(void)
 {
-char **env = environ;
+extern char **environ;
+char **env = enviroin;
 while (*env != NULL)
 {
 printf("%s\n", *env);
@@ -27,6 +28,7 @@ return (0);
 **/
 char *_getenv(const char *name)
 {
+extern char **environ;
 char **env = environ;
 while (*env != NULL)
 {

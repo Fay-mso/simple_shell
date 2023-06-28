@@ -6,7 +6,7 @@ typedef struct
 char **argv;
 int argc;
 char **env;
-} info_t;
+}info_t;
 
 int _env(void);
 char *_getenv(const char *name);
