@@ -1,90 +1,62 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include "main.h"
 
 /**
- * execute_command - Execute a command in the shell
+ * displayShell - A function that displays the shell prompt
  *
- * @command: The command to execute
- *
- * Return: Always returns 0
  */
-int execute_command(char *command)
+
+void displayShell(void)
 {
-	pid_t pid;
-	int status;
-	char **argv;
-
-	pid = fork();
-
-	if (pid == -1)
-	{
-		perror("Fork failed");
-		exit(1);
-	}
-	else if (pid == 0)
-	{
-		/* Child process */
-		argv = malloc(2 * sizeof(char *));
-		if (argv == NULL)
-		{
-			perror("Memory allocation failed");
-			exit(1);
-		}
-
-		argv[0] = command;
-		argv[1] = NULL;
-
-		if (execvp(argv[0], argv) == -1)
-		{
-			perror("Command execution failed");
-			exit(1);
-		}
-	}
-	else
-	{
-		/* Parent process */
-		wait(&status);
-	}
-
-	return (0);
+	printf("shell> ");
+	fflush(stdout);
 }
 
+
 /**
- * main - Entry point of the shell program
- *
- * Return: Always returns 0
+ * main - A function that returns our version of a simple shell
+ * Return: Hopefully a well working shell
  */
+
 int main(void)
 {
-	char *line = NULL;
-	size_t bufsize = 0;
-	ssize_t characters_read;
+	pid_t child_pid;
+	int status;
+	char *command = NULL;
+	size_t n = 0;
+	char *argv[] = {"/bin/sh", "-c", NULL, NULL};
 
 	while (1)
 	{
-		printf("#josieShell$ ");
-		characters_read = getline(&line, &bufsize, stdin);
-
-		if (characters_read == -1)
-		{
-			printf("\n");
-			break;
-		}
-
-		line[characters_read - 1] = '\0';
-
-		if (strcmp(line, "exit") == 0)
-		{
-			break;
-		}
-
-		execute_command(line);
+		displayShell();
+	if (getline(&command, &n, stdin) == -1)
+	{
+		perror("Error: ");
+		break;
 	}
-
-	free(line);
+	command[strcspn(command, "\n")] = '\0';
+	if (strcmp(command, "exit") == 0)
+	{
+		printf("You are leaving the shell...Sad to see you go...\n");
+		break;
+	}
+	child_pid = fork();
+	if (child_pid == -1)
+	{
+		perror("Error: ");
+		exit(1);
+	}
+	if (child_pid == 0)
+	{
+		argv[2] = command;
+		execve("/bin/sh", argv, NULL);
+		perror("Error: ");
+		exit(1);
+	}
+	else
+	{
+		wait(&status);
+	}
+	}
+	free(command);
 	return (0);
 }
