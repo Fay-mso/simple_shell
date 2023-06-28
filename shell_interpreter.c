@@ -50,7 +50,7 @@ int execute_command(char *command)
 		wait(&status);
 	}
 
-	return 0;
+	return (0);
 }
 
 /**
@@ -73,16 +73,18 @@ int main(void)
 		{
 			printf("\n");
 			break;
-		 }
+		}
 
-		line[characters_read - 1] = '\0'; /* Remove the newline character */
+		line[characters_read - 1] = '\0';
 
 		if (strcmp(line, "exit") == 0)
+		{
 			break;
+		}
 
 		execute_command(line);
 	}
 
 	free(line);
-	return 0;
+	return (0);
 }
